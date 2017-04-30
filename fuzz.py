@@ -24,7 +24,7 @@ class BurpExtender(IBurpExtender,IIntruderPayloadGeneratorFactory,IHttpRequestRe
 
 class DetectXss(IIntruderPayloadGenerator):
     def __init__(self,attack,cookie):
-        self.target="http://www.kyc.hbnu.edu.cn/common/image.jsp"
+        self.target="captcha's link"
         self.cookie = cookie
         self.max = 1
         self.num = 0
