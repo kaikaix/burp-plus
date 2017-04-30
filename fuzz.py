@@ -2,6 +2,7 @@ from burp import IBurpExtender
 import requests
 import os
 import re
+import time
 from burp import IIntruderPayloadGeneratorFactory
 from burp import IIntruderPayloadGenerator
 from burp import IHttpRequestResponse
@@ -17,12 +18,13 @@ class BurpExtender(IBurpExtender,IIntruderPayloadGeneratorFactory,IHttpRequestRe
 
     def createNewInstance(self,attack):
         tem = "".join(chr(abs(x)) for x in attack.getRequestTemplate())
-        tem = re.findall("Cookie:(.+?)\n",tem)
+        tem = re.findall("Cookie: (.+?)\r\n",tem)[0]
+        print tem
         return DetectXss(attack,tem)
 
 class DetectXss(IIntruderPayloadGenerator):
     def __init__(self,attack,cookie):
-        self.target="input the code's link here"
+        self.target="http://www.kyc.hbnu.edu.cn/common/image.jsp"
         self.cookie = cookie
         self.max = 1
         self.num = 0
@@ -37,12 +39,11 @@ class DetectXss(IIntruderPayloadGenerator):
     def getNextPayload(self,payload):
         headers = {'Cookie':self.cookie}
         r = requests.get(self.target,headers=headers)
-        f = open('code.png','w')
+        f = open('/root/code.jpg','w')
         f.write(r.content)
         f.close()
-        os.system('python code.py')
-
-        f = open('result.txt','r')
+        os.system('python /root/githubs/burp-plus/code.py')
+        f = open('/root/result.txt','r')
         code = f.read()
         f.close()
         
